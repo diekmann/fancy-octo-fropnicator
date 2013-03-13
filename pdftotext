@@ -1,0 +1,17 @@
+#!/bin/bash
+# makes a text from the pdf
+# word understands text and grammar :)
+
+pdftotext -nopgbrk -raw adaptive-sampling.pdf
+
+OUTTXT="adaptive-sampling.txt"
+
+#remove newline
+sed -i ':a;N;$!ba;s/\n/ /g' $OUTTXT
+
+
+#remove hyphenation
+sed -i 's/- //g' $OUTTXT
+
+#remove citations
+sed -i -r 's/ \[[0-9]+(,[0-9]*)*(\], \[[0-9]+)*\]//g' $OUTTXT
