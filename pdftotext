@@ -2,9 +2,25 @@
 # makes a text from the pdf
 # word understands text and grammar :)
 
-pdftotext -nopgbrk -raw adaptive-sampling.pdf
+INPDF="$1"
+OUTTXT="$2"
 
-OUTTXT="adaptive-sampling.txt"
+if [ -z "$INPDF" ]; then
+	echo "Usage: $0 InPDF OutTXT"
+	exit -1
+fi
+
+if [ -z "$OUTTXT" ]; then
+        echo "Output will be written to ${INPDF}.txt"
+	OUTTXT="${INPDF}.txt"
+fi
+
+if [ ! -f "$INPDF" ]; then
+	echo "Seems like $INPDF is not a normal file or does not exist"
+	exit -1
+fi
+
+pdftotext -nopgbrk -raw "$INPDF" "$OUTTXT"
 
 #remove newline
 sed -i ':a;N;$!ba;s/\n/ /g' $OUTTXT
@@ -14,4 +30,6 @@ sed -i ':a;N;$!ba;s/\n/ /g' $OUTTXT
 sed -i 's/- //g' $OUTTXT
 
 #remove citations
-sed -i -r 's/ \[[0-9]+(,[0-9]*)*(\], \[[0-9]+)*\]//g' $OUTTXT
+sed -i -r 's/ \[[0-9]+(, *[0-9]*)*(\], \[[0-9]+)*\]//g' $OUTTXT
+
+
